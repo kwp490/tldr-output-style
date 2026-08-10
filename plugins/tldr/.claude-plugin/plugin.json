@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "tldr",
+  "displayName": "TLDR",
+  "description": "Reshapes every Claude Code response for an ADHD reader: action first, numbered steps, no preamble, written in ASD-STE100 Simplified Technical English.",
+  "version": "1.0.0",
+  "author": {
+    "name": "kwp490",
+    "url": "https://github.com/kwp490"
+  },
+  "homepage": "https://github.com/kwp490/tldr-output-style",
+  "repository": "https://github.com/kwp490/tldr-output-style",
+  "license": "MIT",
+  "keywords": [
+    "output-style",
+    "adhd",
+    "accessibility",
+    "ste100",
+    "simplified-technical-english",
+    "concise"
+  ]
+}
