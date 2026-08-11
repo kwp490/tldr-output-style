@@ -53,6 +53,41 @@ jobs:
           done
           bash -n demo/demo.sh
 
+      - name: Eval cases exist and each has at least one grader
+        run: |
+          # This job never RUNS an eval. A GitHub runner has nobody logged in,
+          # so executing a case would need an API key secret in a public repo.
+          # These checks are file-shape only and need no auth.
+          test -f evals/README.md || { echo "::error::missing evals/README.md"; exit 1; }
+          for c in evals/01-messy-email evals/02-casual-question evals/03-explain-break-glass; do
+            test -f "$c/prompt.md" || { echo "::error::missing $c/prompt.md"; exit 1; }
+            n=$(find "$c/graders" -maxdepth 1 -name '*.md' | wc -l)
+            [ "$n" -ge 1 ] || { echo "::error::$c has no graders"; exit 1; }
+          done
+
+      - name: Ablation stays wired up in every case
+        run: |
+          # Without a `plugins:` declaration the runner refuses to run the
+          # baseline arm, and the suite silently stops measuring uplift.
+          for f in evals/*/prompt.md; do
+            grep -q '^plugins:' "$f" || {
+              echo "::error::$f has no 'plugins:' frontmatter — --ablation with-without would abort"
+              exit 1
+            }
+          done
+
+      - name: Eval fixture matches the demo fixture
+        run: |
+          # The eval sandbox cannot read demo/, so the email is duplicated into
+          # the case. Fail the build if the two copies drift apart.
+          f=evals/01-messy-email/prompt.md
+          awk 'BEGIN{n=0} /^---$/{n++; if(n<=2) next} n>=2{print}' "$f" > eval-body.md
+          if ! diff -u demo/prompt.md eval-body.md; then
+            echo "::error::$f has drifted from demo/prompt.md — copy the change across"
+            exit 1
+          fi
+          rm -f eval-body.md
+
   style:
     name: Output style frontmatter
     runs-on: ubuntu-latest

@@ -149,6 +149,9 @@ DEMO.md                             recorded before/after, and how to run it
 demo/
   prompt.md                         the test email both arms are given
   demo.sh, demo.ps1                 run the comparison locally
+evals/
+  README.md                         how to run the suite, and what it measures
+  01-*, 02-*, 03-*                  three scored cases and their graders
 ```
 
 ## Credit

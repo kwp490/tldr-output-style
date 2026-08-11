@@ -1,3 +1,6 @@
 .DS_Store
 Thumbs.db
 *.bak
+
+# `claude plugin eval` writes timestamped run output and an HTML report here.
+evals/results/
