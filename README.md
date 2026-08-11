@@ -136,7 +136,7 @@ The style also defines **when to break its own rules**: on "explain this to me" 
 - **Subagents ignore it.** Each subagent runs its own system prompt. Only `fork` inherits the parent's.
 - **Changes need a restart.** Output style is read once at session start. `/clear` or a new session.
 - **Rule 12 costs tool calls.** Verifying git state before instructing means extra `git status` runs. That is the intent, not a bug.
-- **Claude Code only.** The Claude chat apps do not support output styles. Paste the [style body](plugins/tldr/output-styles/tldr.md) into Settings → Profile, or into a Project's custom instructions, to get most of the effect.
+- **Claude Code only.** The Claude chat apps do not support output styles. Paste the [style body](plugins/tldr/output-styles/tldr.md) into Settings → Profile, or into a Project's custom instructions, to get most of the effect — [DEMO.md](DEMO.md#in-the-claude-chat-app) walks through it and gives you a prompt to compare against.
 
 ## Repository layout
 
