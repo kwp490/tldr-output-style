@@ -44,6 +44,15 @@ jobs:
             exit 1
           fi
 
+      - name: Demo assets exist and the script parses
+        run: |
+          # DEMO.md and the README both link these. Broken links here mean a
+          # visitor's first attempt to try the plugin fails.
+          for f in DEMO.md demo/prompt.md demo/demo.sh demo/demo.ps1; do
+            test -f "$f" || { echo "::error::missing $f"; exit 1; }
+          done
+          bash -n demo/demo.sh
+
   style:
     name: Output style frontmatter
     runs-on: ubuntu-latest

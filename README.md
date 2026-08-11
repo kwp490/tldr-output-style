@@ -10,6 +10,10 @@ After:
 
 > Run `npm install jsonwebtoken`, then edit `src/auth.ts:42`.
 
+Want proof before you install? **[See it working, and not working](DEMO.md)** — a
+recorded before/after on a rambling work email, plus a script that runs the
+comparison on your own machine straight from a clone.
+
 ---
 
 ## Install
@@ -141,6 +145,10 @@ The style also defines **when to break its own rules**: on "explain this to me" 
 plugins/tldr/
   .claude-plugin/plugin.json        the plugin manifest
   output-styles/tldr.md             the style itself
+DEMO.md                             recorded before/after, and how to run it
+demo/
+  prompt.md                         the test email both arms are given
+  demo.sh, demo.ps1                 run the comparison locally
 ```
 
 ## Credit
