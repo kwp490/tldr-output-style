@@ -1,0 +1,86 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  manifests:
+    name: Manifest integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse JSON manifests
+        run: |
+          jq empty .claude-plugin/marketplace.json
+          jq empty plugins/tldr/.claude-plugin/plugin.json
+
+      - name: Plugin source path exists
+        run: |
+          src=$(jq -r '.plugins[] | select(.name == "tldr") | .source' .claude-plugin/marketplace.json)
+          test -d "$src" || { echo "marketplace.json source '$src' is not a directory"; exit 1; }
+          test -f "$src/.claude-plugin/plugin.json" || { echo "no plugin.json under '$src'"; exit 1; }
+
+      - name: Versions agree across manifests
+        run: |
+          mkt=$(jq -r '.plugins[] | select(.name == "tldr") | .version' .claude-plugin/marketplace.json)
+          plg=$(jq -r '.version' plugins/tldr/.claude-plugin/plugin.json)
+          echo "marketplace.json: $mkt"
+          echo "plugin.json:      $plg"
+          if [ "$mkt" != "$plg" ]; then
+            echo "::error::version drift — marketplace.json says '$mkt', plugin.json says '$plg'"
+            exit 1
+          fi
+
+      - name: Names agree across manifests
+        run: |
+          mkt=$(jq -r '.plugins[0].name' .claude-plugin/marketplace.json)
+          plg=$(jq -r '.name' plugins/tldr/.claude-plugin/plugin.json)
+          if [ "$mkt" != "$plg" ]; then
+            echo "::error::name mismatch — marketplace.json says '$mkt', plugin.json says '$plg'"
+            exit 1
+          fi
+
+  style:
+    name: Output style frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required frontmatter keys are present
+        run: |
+          f=plugins/tldr/output-styles/tldr.md
+          test -f "$f" || { echo "missing $f"; exit 1; }
+          head -1 "$f" | grep -qx -- '---' || { echo "$f does not open with YAML frontmatter"; exit 1; }
+          fm=$(awk 'NR>1 && /^---$/{exit} NR>1{print}' "$f")
+          for key in name description keep-coding-instructions force-for-plugin; do
+            echo "$fm" | grep -q "^${key}:" || { echo "::error::frontmatter missing '${key}'"; exit 1; }
+          done
+
+      - name: force-for-plugin stays true
+        run: |
+          # The README promises the style self-applies with no manual outputStyle step.
+          # If this flips to false, that promise silently breaks for every installer.
+          fm=$(awk 'NR>1 && /^---$/{exit} NR>1{print}' plugins/tldr/output-styles/tldr.md)
+          echo "$fm" | grep -qx -- 'force-for-plugin: true' || {
+            echo "::error::force-for-plugin is not true — README's no-second-step promise would break"
+            exit 1
+          }
+
+  cli:
+    name: claude plugin validate
+    runs-on: ubuntu-latest
+    # Informational. The CLI may require onboarding or auth on a cold runner,
+    # which is unrelated to manifest correctness. The `manifests` job above is
+    # the blocking gate; promote this one once it is proven stable here.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: claude plugin validate .

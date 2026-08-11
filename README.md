@@ -24,7 +24,15 @@ claude plugin marketplace add kwp490/tldr-output-style
 claude plugin install tldr@tldr-plugins
 ```
 
-Then restart Claude Code, or run `/clear`. That is it — the style applies itself on install.
+Then restart Claude Code, or run `/clear`. That is it.
+
+> [!IMPORTANT]
+> **There is no third step. Do not turn the style on.**
+>
+> - Do **not** add `outputStyle` to `settings.json`.
+> - Do **not** run `claude config set outputStyle tldr`. That subcommand does not exist. `claude config ...` passes the words to Claude as a prompt, so it answers with a clarifying question instead of failing.
+>
+> The style sets `force-for-plugin: true`, so it applies itself whenever the plugin is enabled. See [Design notes](#design-notes).
 
 <details>
 <summary>Prefer the interactive UI?</summary>
@@ -41,7 +49,34 @@ Paste this to any Claude Code session:
 
 > Install the plugin at https://github.com/kwp490/tldr-output-style
 
-Claude can run both commands itself.
+Claude can run both commands itself. Read the callout above first — the common failure is an agent adding a manual `outputStyle` step that this plugin does not need.
+
+## Verify
+
+Output style is read once at session start, so check from a **new** session:
+
+```bash
+claude -p "Reply with only the name of the active output style, or NONE"
+```
+
+Expected output:
+
+```
+tldr:TLDR
+```
+
+If you get `NONE`, the plugin is disabled or the session predates the install. Confirm with `claude plugin list` — status should read `enabled`.
+
+> [!WARNING]
+> Do not use `claude plugin details tldr` to verify. It reports `Skills (0)`, `Agents (0)`, `Hooks (0)` and `Always-on: ~0 tok`, because that inventory does not count output styles. The plugin is working; the command simply does not measure this kind of content.
+
+## Update
+
+```bash
+claude plugin update tldr@tldr-plugins
+```
+
+Restart Claude Code to apply.
 
 ## Uninstall
 
@@ -54,6 +89,12 @@ Your previous output style returns on the next session. To remove it completely:
 ```bash
 claude plugin uninstall tldr@tldr-plugins
 ```
+
+## One project only, without the plugin
+
+The plugin is global. To scope TLDR to a single codebase instead, copy [the style file](plugins/tldr/output-styles/tldr.md) to `<project>/.claude/output-styles/tldr.md` and commit it. The style then travels with that repo and applies only inside it.
+
+This path has no plugin to set `force-for-plugin`, so it is the one case where you *do* select the style yourself — via `/output-style` in an interactive session.
 
 ---
 

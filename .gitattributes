@@ -1,0 +1,7 @@
+# Keep LF in the repository for everything text.
+# CI runs the `run:` blocks in .github/workflows through bash; a CRLF
+# checkout appends \r to each line and breaks them.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
