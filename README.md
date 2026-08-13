@@ -23,8 +23,10 @@ recorded before/after on a rambling work email, plus a script that runs the
 comparison on your own machine straight from a clone.
 
 Prefer numbers to anecdotes? The **[eval suite](evals/README.md)** scores three
-cases with the plugin and without it: **mean delta +0.23**, including a case that
-checks the style *relaxes* when you ask to be walked through something.
+cases with the plugin and without it: **mean delta +0.24**, including a case that
+checks the style *relaxes* when you ask to be walked through something — and one
+[known failure](evals/README.md#known-failure-break-glass-closes-with-a-menu) it
+is currently catching.
 
 ---
 
@@ -75,11 +77,14 @@ Output style is read once at session start, so check from a **new** session:
 claude -p "Reply with only the name of the active output style, or NONE"
 ```
 
-Expected output:
+Expected output — either of these means it is working:
 
 ```
 tldr:TLDR
+TLDR
 ```
+
+The reply is the model naming its own style, so it varies between the bare name and the plugin-namespaced id. Both are a pass. Only `NONE` is a failure.
 
 If you get `NONE`, the plugin is disabled or the session predates the install. Confirm with `claude plugin list` — status should read `enabled`.
 

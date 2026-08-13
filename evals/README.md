@@ -41,15 +41,41 @@ commit. Reproduce before trusting any comparison.
 
 ```
 CASE                     WITH  WITHOUT   Δ
-01-messy-email           0.87   0.54   +0.33
-02-casual-question       1.00   0.83   +0.17
-03-explain-break-glass   1.00   0.82   +0.18
-                                mean Δ +0.23
+01-messy-email           0.90   0.56   +0.33
+02-casual-question       0.95   0.71   +0.24
+03-explain-break-glass   0.85   0.69   +0.15
+                                mean Δ +0.24
 ```
 
 `no-contractions` carries most of the delta. It passes 3 of 3 in the plugin arm
 on every case and 0 of 3 in the baseline arm on every case. It is free and
 deterministic. If only one grader survives a future cleanup, keep that one.
+
+## Known failure: break-glass closes with a menu
+
+`single-closing-ask` was originally wired to case 01 only. Cases 02 and 03
+therefore scored 1.00 while breaking rule 3, because nothing looked at the shape
+of their closing line. `no-closer` is a different check — it catches pleasantries
+like "hope this helps", not menus.
+
+With the grader wired to all three cases, the plugin arm fails it **3 of 3 on
+case 03**, every run, and 1 of 3 on case 02. Observed closing:
+
+> Next: tell me if you want a sequence diagram of this flow, or a code sample in
+> a specific language.
+
+Rule 3 forbids exactly that: "One thing. Not two options joined by 'or'."
+Break-glass relaxes length and requires headers. It does not relax the closing.
+
+This is a real defect in the style, not a grader artefact. Case 03's score fell
+from 1.00 to 0.85 when the grader was added, and its delta fell from +0.18 to
++0.15 — the plugin arm and the baseline arm now fail this check equally, so the
+style earns no uplift on it here.
+
+Adding the grader raised case 02's delta (+0.17 to +0.24) because the baseline
+fails the check 3 of 3 while the plugin arm fails it only 1 of 3. Wiring a
+grader to more cases can move a delta in either direction. That is the grader
+measuring more, not the style changing.
 
 Case 1 is the only case below 1.00. Three graders score 2 of 3 there
 (`deadlines-present`, `single-closing-ask`, `tangent-parked`). Those are real

@@ -111,10 +111,10 @@ case, scored by a sonnet judge:
 
 ```
 CASE                     WITH  WITHOUT   Δ
-01-messy-email           0.87   0.54   +0.33
-02-casual-question       1.00   0.83   +0.17
-03-explain-break-glass   1.00   0.82   +0.18
-                                mean Δ +0.23
+01-messy-email           0.90   0.56   +0.33
+02-casual-question       0.95   0.71   +0.24
+03-explain-break-glass   0.85   0.69   +0.15
+                                mean Δ +0.24
 ```
 
 Case 3 is the one worth noticing. It rewards the style for **relaxing** — the
@@ -122,10 +122,15 @@ break-glass rules say explain-this-to-me requests should get a full, headed
 explanation, not a terse list. A suite that only rewarded brevity would train the
 style into always-terse and quietly break its own escape hatch.
 
-The suite also found three real defects in the style and drove the fixes now
-shipping in 1.2.1, including the single-closing-action rule visible in the
-recording above. Details and reproduction steps are in
-[`evals/README.md`](evals/README.md).
+Case 3 is also where the style is currently **worst**. It reliably closes an
+explanation with a two-option menu, which rule 3 forbids, and it does so on every
+run. No score here is being hidden: 0.85 is the honest number and the delta of
++0.15 is the smallest of the three. [`evals/README.md`](evals/README.md) records
+the failing output and why it happens.
+
+The suite also drove three fixes into the style shipping in 1.2.1, including the
+single-closing-action rule visible in the recording above — which holds on the
+email case and does not yet hold on explain requests.
 
 Numbers still beat anecdotes only if you can reproduce them. Run the script, or
 run the suite.
