@@ -111,10 +111,10 @@ case, scored by a sonnet judge:
 
 ```
 CASE                     WITH  WITHOUT   Δ
-01-messy-email           0.90   0.56   +0.33
-02-casual-question       0.95   0.71   +0.24
-03-explain-break-glass   0.85   0.69   +0.15
-                                mean Δ +0.24
+01-messy-email           0.87   0.49   +0.38
+02-casual-question       0.86   0.71   +0.14
+03-explain-break-glass   1.00   0.69   +0.31
+                                mean Δ +0.28
 ```
 
 Case 3 is the one worth noticing. It rewards the style for **relaxing** — the
@@ -122,15 +122,15 @@ break-glass rules say explain-this-to-me requests should get a full, headed
 explanation, not a terse list. A suite that only rewarded brevity would train the
 style into always-terse and quietly break its own escape hatch.
 
-Case 3 is also where the style is currently **worst**. It reliably closes an
-explanation with a two-option menu, which rule 3 forbids, and it does so on every
-run. No score here is being hidden: 0.85 is the honest number and the delta of
-+0.15 is the smallest of the three. [`evals/README.md`](evals/README.md) records
-the failing output and why it happens.
+Case 3 is also the suite proving its worth. At 1.2.1 it scored 0.85, because the
+style reliably ended a long explanation with a two-option menu — which rule 3
+forbids. The suite caught it, the rule was tightened, and 1.2.2 scores 1.00 on
+that case with the baseline arm still failing. That loop is written up in
+[`evals/README.md`](evals/README.md).
 
-The suite also drove three fixes into the style shipping in 1.2.1, including the
-single-closing-action rule visible in the recording above — which holds on the
-email case and does not yet hold on explain requests.
+Treat individual numbers with care. At three runs per arm a case score moves by
+roughly ±0.10 between identical runs — case 02 reads 0.86 here and 0.96 at seven
+runs. The deltas are the durable signal; single scores are not.
 
 Numbers still beat anecdotes only if you can reproduce them. Run the script, or
 run the suite.

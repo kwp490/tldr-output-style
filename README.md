@@ -23,10 +23,12 @@ recorded before/after on a rambling work email, plus a script that runs the
 comparison on your own machine straight from a clone.
 
 Prefer numbers to anecdotes? The **[eval suite](evals/README.md)** scores three
-cases with the plugin and without it: **mean delta +0.24**, including a case that
-checks the style *relaxes* when you ask to be walked through something — and one
-[known failure](evals/README.md#known-failure-break-glass-closes-with-a-menu) it
-is currently catching.
+cases with the plugin and without it: **mean delta +0.28**, including a case that
+checks the style *relaxes* when you ask to be walked through something. It has
+already earned its keep — it caught a rule the style was breaking on every
+explain request, and
+[the fix](evals/README.md#case-study-a-defect-the-suite-found-and-fixed) took
+that case from 0.85 to 1.00.
 
 ---
 
