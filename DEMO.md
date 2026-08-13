@@ -33,70 +33,102 @@ back even if you Ctrl-C out.
 
 ## A recorded run
 
-Abridged. Full text in the collapsed blocks.
+Abridged, recorded against v1.2.1. The sharpest difference is the **last line**,
+so start there.
 
-**Without TLDR**, the answer opened by describing the email:
+**Without TLDR**, the answer closed by offering a menu:
 
-> This email has six separate threads tangled together. Here's the breakdown and a drafted reply:
+> Want me to tighten/send this, or adjust tone/decisions first?
 
-**With TLDR**, it opened by telling you what to do:
+and then, after a draft reply, asked again:
 
-> **Next action:** Decide these 3 things, then I can draft your reply.
+> Let me know if you want me to change who's doing what (especially the Sam ping and the latency investigation) before treating this as final.
+
+**With TLDR**, it closed with one action and a yes-or-no:
+
+> Next: I draft a reply covering items 1 to 4. Yes or no?
 
 <details>
 <summary>Without TLDR — full answer</summary>
 
-The reply listed **4 action items**, then **2 lower-priority items**, then **3
-open questions** — nine entries across three overlapping lists, where the open
-questions restate items already in the first list. It then produced an
-unrequested draft reply containing a bracketed placeholder:
+Opened with "Here's the signal extracted from that wall of text — 6 threads
+tangled together," then rendered a **six-row table** with an Owner column, then
+a dependency analysis, then an unrequested draft reply containing bracketed
+blanks you still have to fill:
 
-> **The 22nd**: [confirm or correct — I don't have that on my side either, want to double check before marketing's campaign emails go out on a date we didn't actually commit to]
+> **Search latency:** Let's get eyes on the p95 regression before we talk promotion — I'll [take it / ask X] to check whether it's the analyzer or cold caches.
 
-and closed with a compound offer:
-
-> Want me to adjust tone/content, or help you actually track down the search latency regression or the "22nd" commitment?
+It ended with two separate asks, quoted above. Nothing here is wrong. It is
+simply more than you can act on, and it hands back decisions dressed as a draft.
 
 </details>
 
 <details>
 <summary>With TLDR — full answer</summary>
 
-Split into **3 decisions needed from you** and **3 FYI, no reply needed**. The
-dashboard tangent was parked in the FYI group, marked as the sender's own "not
-urgent." It closed with a single question:
+Split into **4 that need your decision now** and **3 FYI, no action required**.
+The dashboard tangent went to the FYI group, carrying the sender's own "not
+urgent." The deadline was resolved to an absolute date — "due Friday, August 14,
+2026" — rather than left as "Friday."
 
-> Want me to draft a reply email covering all 3 decisions once you tell me your answers?
+It closed with a single yes-or-no, quoted above.
 
 </details>
+
+That closing line is not a coincidence. The [eval suite](evals/README.md) caught
+the old version offering a menu instead of one action, and the style file was
+changed in response. `plugins/tldr/output-styles/tldr.md` now says outright:
+
+> Bad: "Next: tell me which item to start with, or say the word and I will draft the reply."
+> Good: "Next: I draft the reply covering all four items. Yes or no?"
 
 ## What to look for
 
 Not exact wording — the wording changes every run. These are the durable
 differences:
 
-1. **Does the first line tell you what to do,** or describe what you are looking at?
-2. **Is there one list or three?** The default answer tends to produce overlapping
-   groups — action items, then open questions that repeat them. Anything you have
-   to reconcile across lists costs working memory.
+1. **Does the closing ask for one thing, or offer a menu?** This is the most
+   reliable difference. A menu is a decision you must make before you can act.
+2. **Is the answer split by what it needs from you,** or by topic? "Decide these
+   4, ignore these 3" is actionable. A six-row table with an Owner column is a
+   document.
 3. **Where did the tangent go?** The sender's own "not urgent" dashboard note
    should be parked, not expanded.
-4. **Does the closing ask for one thing or several?** A compound closing question
-   is a decision you have to make before you can act.
-5. **Did it pre-write a draft you did not ask for,** with blanks you still have to
+4. **Did it pre-write a draft you did not ask for,** with blanks you still have to
    fill? That is the gap between knowing the answer and doing it — the thing
    these rules exist to close.
+5. **Are deadlines resolved to dates?** "Due Friday" is a lookup. "Due Friday,
+   August 14, 2026" is not.
 
-## An honest caveat
+Note what is *not* on this list: which answer opens with an action. That one
+varies too much between runs to rely on.
 
-Model output varies between runs. I ran this pair twice while writing the demo.
-The first run is recorded above and the contrast was stark. On the second run the
-gap was **narrower**: the default answer was already fairly well-structured, and
-the TLDR answer did not lead with "Next action." The differences in items 3, 4
-and 5 above held in both runs; item 1 held in one of two.
+## How much does it actually change?
 
-This is exactly why the script ships alongside this page. A recorded before/after
-is a claim. Run it on your own machine and judge for yourself.
+A single recorded pair is an anecdote. The [eval suite](evals/README.md) is the
+measurement. Three cases, each run with the plugin and without it, three runs per
+case, scored by a sonnet judge:
+
+```
+CASE                     WITH  WITHOUT   Δ
+01-messy-email           0.87   0.54   +0.33
+02-casual-question       1.00   0.83   +0.17
+03-explain-break-glass   1.00   0.82   +0.18
+                                mean Δ +0.23
+```
+
+Case 3 is the one worth noticing. It rewards the style for **relaxing** — the
+break-glass rules say explain-this-to-me requests should get a full, headed
+explanation, not a terse list. A suite that only rewarded brevity would train the
+style into always-terse and quietly break its own escape hatch.
+
+The suite also found three real defects in the style and drove the fixes now
+shipping in 1.2.1, including the single-closing-action rule visible in the
+recording above. Details and reproduction steps are in
+[`evals/README.md`](evals/README.md).
+
+Numbers still beat anecdotes only if you can reproduce them. Run the script, or
+run the suite.
 
 ## In the Claude chat app
 
@@ -108,3 +140,6 @@ the script does not apply — but you can still run the same comparison by hand:
 2. Paste [`demo/prompt.md`](demo/prompt.md) into that Project.
 3. Paste the same email into an ordinary chat with no custom instructions.
 4. Compare, using the five checks above.
+
+The scored [eval suite](evals/README.md) does not apply here — it drives the
+Claude Code CLI. The five checks are the portable part.

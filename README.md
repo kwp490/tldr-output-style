@@ -22,6 +22,10 @@ Want proof before you install? **[See it working, and not working](DEMO.md)** â€
 recorded before/after on a rambling work email, plus a script that runs the
 comparison on your own machine straight from a clone.
 
+Prefer numbers to anecdotes? The **[eval suite](evals/README.md)** scores three
+cases with the plugin and without it: **mean delta +0.23**, including a case that
+checks the style *relaxes* when you ask to be walked through something.
+
 ---
 
 ## Install
@@ -166,7 +170,7 @@ evals/
 
 The rules in this repository were created by **[r13i](https://github.com/r13i)** as the [`tldr` skill](https://github.com/r13i/skills/tree/main/tldr). That work is MIT licensed, stated in [their repository's README](https://github.com/r13i/skills#license) as "use, copy, adapt freely."
 
-This repository contributes the conversion and the packaging: the skill becomes an output style so the rules load every turn instead of when the model judges them relevant, and it gains a plugin manifest, a marketplace, a [runnable demo](DEMO.md), and CI. The twelve rules, the break-glass section, and the pre-send check are r13i's, unchanged in substance. What changed in the conversion is set out in [Design notes](#design-notes).
+This repository contributes the conversion and the packaging: the skill becomes an output style so the rules load every turn instead of when the model judges them relevant, and it gains a plugin manifest, a marketplace, a [runnable demo](DEMO.md), an [eval suite](evals/README.md), and CI. The twelve rules, the break-glass section, and the pre-send check are r13i's. The conversion changed the frontmatter and removed the skill's trigger language, which an output style does not need; the rules themselves are unchanged in substance. Later releases tightened three of them in response to eval findings â€” [`evals/README.md`](evals/README.md) records what changed and why. The reasoning behind the packaging choices is in [Design notes](#design-notes).
 
 The prose standard is [ASD-STE100](https://www.asd-ste100.org/), maintained by the AeroSpace and Defence Industries Association of Europe. It is an external standard, referenced here rather than reproduced.
 
