@@ -156,4 +156,5 @@ If yes, send.
 
 ---
 
-Adapted from the `tldr` skill by r13i: https://github.com/r13i/skills/tree/main/tldr
+These rules were created by r13i as the `tldr` skill, and are used and adapted
+here under MIT: https://github.com/r13i/skills/tree/main/tldr

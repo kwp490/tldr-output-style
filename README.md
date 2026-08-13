@@ -2,6 +2,14 @@
 
 Claude Code, rewritten to answer the way an ADHD brain can actually act on: **the next action first, numbered steps, no preamble, no closing pleasantries**, and all prose in [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/).
 
+> ### Credit
+>
+> The twelve rules are not mine. They originate in the **[`tldr` skill by r13i](https://github.com/r13i/skills/tree/main/tldr)**, released under MIT with the invitation to "use, copy, adapt freely." All twelve rules, the break-glass section, and the pre-send check are theirs, unchanged in substance.
+>
+> The prose standard is **[ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/)**, maintained by the AeroSpace and Defence Industries Association of Europe.
+>
+> What this repository adds is packaging, not ideas: conversion from a skill to an output style so the rules apply unconditionally, plus the plugin manifest, marketplace, [demo](DEMO.md), and CI.
+
 Before:
 
 > Great question! Let me take a look at your auth flow. There are a few moving pieces here, and I want to make sure I understand the context before diving in...
@@ -156,6 +164,10 @@ evals/
 
 ## Credit
 
-Adapted from the [`tldr` skill by r13i](https://github.com/r13i/skills/tree/main/tldr), which originated these rules. This repository repackages them as an output style so they apply unconditionally, and adds the plugin and marketplace scaffolding.
+The rules in this repository were created by **[r13i](https://github.com/r13i)** as the [`tldr` skill](https://github.com/r13i/skills/tree/main/tldr). That work is MIT licensed, stated in [their repository's README](https://github.com/r13i/skills#license) as "use, copy, adapt freely."
 
-MIT licensed. See [LICENSE](LICENSE).
+This repository contributes the conversion and the packaging: the skill becomes an output style so the rules load every turn instead of when the model judges them relevant, and it gains a plugin manifest, a marketplace, a [runnable demo](DEMO.md), and CI. The twelve rules, the break-glass section, and the pre-send check are r13i's, unchanged in substance. What changed in the conversion is set out in [Design notes](#design-notes).
+
+The prose standard is [ASD-STE100](https://www.asd-ste100.org/), maintained by the AeroSpace and Defence Industries Association of Europe. It is an external standard, referenced here rather than reproduced.
+
+This repository is itself MIT licensed — see [LICENSE](LICENSE) — which is a separate grant from the upstream one above.

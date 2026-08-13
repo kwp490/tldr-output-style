@@ -10,7 +10,7 @@
       "name": "tldr",
       "source": "./plugins/tldr",
       "description": "Reshapes every Claude Code response for an ADHD reader: action first, numbered steps, no preamble, written in ASD-STE100 Simplified Technical English.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "category": "productivity",
       "tags": [
         "output-style",
